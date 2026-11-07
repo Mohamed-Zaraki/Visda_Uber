@@ -65,34 +65,14 @@ STEPS.append({
     "table": to_html(datavis.boxplot_table(raw)),
 })
 
+# nettoyage, variables de date/heure et tri : appliques mais non affiches dans la page
 df = datavis.clean(raw)
-add_tables(
-    "3. Nettoyage des donnees",
-    "On garde les tarifs strictement positifs, 1 a 6 passagers, des coordonnees valides "
-    "(longitude entre -180 et 180, latitude entre -90 et 90) et differentes de 0. "
-    "Statistiques descriptives apres nettoyage.",
-    [("Statistiques apres nettoyage", df.describe())],
-)
-
 df = datavis.add_datetime_features(df)
-add_tables(
-    "4. Variables de date et d'heure",
-    "La date de prise en charge est convertie en vraie date, puis on en extrait l'annee, l'heure, "
-    "le nom du mois et le nom du jour.",
-    [("Apercu", df.head())],
-)
-
 df = datavis.sort_by_date(df)
-add_tables(
-    "5. Tri chronologique",
-    "Les courses sont triees de la plus ancienne a la plus recente, puis la colonne de date "
-    "d'origine est supprimee.",
-    [("Apercu", df.head())],
-)
 
 df = datavis.add_distance(df)
 add_tables(
-    "6. Distance de la course",
+    "3. Distance de la course",
     "La distance a vol d'oiseau (formule de haversine, rayon terrestre 6 371 km) entre la prise "
     "en charge et le depot est ajoutee ; on garde les trajets de plus de 0 et jusqu'a 200 km.",
     [("Apercu", df.head())],
@@ -106,7 +86,7 @@ sns.set_theme(style='whitegrid', rc={
     "xtick.color": INK2, "ytick.color": INK2, "axes.titlecolor": INK, "axes.titleweight": "semibold"})
 
 add_figure(
-    "fig1", "7. Figure 1 : vue d'ensemble (2 x 2)",
+    "fig1", "4. Figure 1 : vue d'ensemble (2 x 2)",
     "Quatre graphiques : distribution des tarifs (histogramme + courbe de densite), relation "
     "distance / tarif (nuage de points), tarif moyen par heure de la journee, nombre de courses "
     "par jour de la semaine.",
@@ -114,7 +94,7 @@ add_figure(
 
 nyc_map, n_pickups, n_dropoffs = datavis.build_map(df)
 STEPS.append({
-    "kind": "map", "title": "8. Carte interactive des prises en charge et des depots",
+    "kind": "map", "title": "5. Carte interactive des prises en charge et des depots",
     "desc": "Seules les courses dans la zone de New York (latitude 40,5 a 40,9 ; longitude -74,25 a "
             "-73,7) sont gardees. Deux calques : prises en charge (rouge) et depots (bleu), avec un "
             "menu de calques. La carte est aussi enregistree dans un fichier HTML.",
@@ -122,17 +102,17 @@ STEPS.append({
 })
 
 add_tables(
-    "9. Courses par mois et montant total par jour",
+    "6. Courses par mois et montant total par jour",
     "Nombre de courses par mois (de janvier a decembre), puis somme des tarifs par jour de la semaine.",
     datavis.monthly_and_daily_totals(df),
 )
 
 add_figure(
-    "fig2", "10. Figure 2 : montants totaux par jour et par mois",
+    "fig2", "7. Figure 2 : montants totaux par jour et par mois",
     "Deux diagrammes en barres cote a cote : somme des tarifs par jour de la semaine, puis par mois.",
 )
 add_figure(
-    "fig3", "11. Figure 3 : tarif moyen par nombre de passagers",
+    "fig3", "8. Figure 3 : tarif moyen par nombre de passagers",
     "Barres du tarif moyen pour 1 a 6 passagers.",
 )
 
